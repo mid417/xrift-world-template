@@ -53,26 +53,26 @@ export const InteractableButton: React.FC<InteractableButtonProps> = ({
         </RigidBody>
       </Interactable>
 
-      {/* ボタンのラベル */}
+      {/* クリック回数の表示 - ボタンの上部 */}
       <Text
-        position={[0, 0.3, 0]}
+        position={[0, 0.5, 0]}
+        fontSize={0.12}
+        color="#ffeb3b"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {clickCount > 0 ? `${clickCount}回クリック` : ''}
+      </Text>
+
+      {/* ボタンのラベル - ボタンの中央 */}
+      <Text
+        position={[0, 0, 0]}
         fontSize={0.15}
         color="white"
         anchorX="center"
         anchorY="middle"
       >
         {label}
-      </Text>
-
-      {/* クリック回数の表示 */}
-      <Text
-        position={[0, -0.3, 0]}
-        fontSize={0.1}
-        color="white"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {clickCount > 0 ? `${clickCount}回クリック` : ''}
       </Text>
     </group>
   )
