@@ -1,4 +1,4 @@
-import { Mirror } from '@xrift/world-components'
+import { Mirror, VideoScreen } from '@xrift/world-components'
 import { RigidBody } from '@react-three/rapier'
 import { useRef } from 'react'
 import { Mesh } from 'three'
@@ -96,21 +96,8 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
       </RigidBody>
 
       <RigidBody type="fixed" colliders="ball" restitution={0} friction={0}>
-        <mesh position={[5 * scale, 1.5 * scale, -5 * scale]} castShadow>
-          <sphereGeometry args={[1.5 * scale]} />
-          <meshLambertMaterial color={COLORS.decorations.sphere} />
-        </mesh>
-      </RigidBody>
 
-      {/* 照明用のポール */}
-      <RigidBody type="fixed" colliders="hull" restitution={0} friction={0}>
-        <mesh position={[0, 4 * scale, 0]} castShadow>
-          <cylinderGeometry args={[0.1 * scale, 0.1 * scale, 8 * scale]} />
-          <meshLambertMaterial color={COLORS.lightPost} />
-        </mesh>
       </RigidBody>
-
-      {/* デバッグ用段差テストオブジェクト */}
 
       {/* 0.1mの低い段差 */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
@@ -146,42 +133,35 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
 
       {/* 階段状のオブジェクト */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[6 * scale, 0.05 * scale, 3 * scale]} castShadow>
-          <boxGeometry args={[1 * scale, 0.1 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#00FFFF" />
-        </mesh>
+
       </RigidBody>
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[6 * scale, 0.15 * scale, 2 * scale]} castShadow>
-          <boxGeometry args={[1 * scale, 0.3 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#00FFFF" />
-        </mesh>
+
       </RigidBody>
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[6 * scale, 0.25 * scale, 1 * scale]} castShadow>
-          <boxGeometry args={[1 * scale, 0.5 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#00FFFF" />
-        </mesh>
+
       </RigidBody>
 
       {/* 狭い隙間テスト */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[2 * scale, 1 * scale, -6 * scale]} castShadow>
-          <boxGeometry args={[0.3 * scale, 2 * scale, 2 * scale]} />
-          <meshLambertMaterial color="#FF00FF" />
-        </mesh>
+
       </RigidBody>
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[3.2 * scale, 1 * scale, -6 * scale]} castShadow>
-          <boxGeometry args={[0.3 * scale, 2 * scale, 2 * scale]} />
-          <meshLambertMaterial color="#FF00FF" />
-        </mesh>
+
       </RigidBody>
 
       {/* 鏡 - ワールドの中央に配置 */}
       <Mirror
         position={[0, 2.5 * scale, -9.5]}
         size={[4 * scale, 3 * scale]}
+      />
+
+      <VideoScreen
+        id='sample-video'
+        position={[9.72, 2, 0]}
+        rotation={[0, -Math.PI / 2, 0]}
+        url='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+        playing
       />
 
       {/* アニメーション: ぐるぐる回るオブジェクト */}

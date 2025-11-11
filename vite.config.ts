@@ -25,6 +25,9 @@ export default defineConfig({
           singleton: true,
           requiredVersion: '^19.0.0',
         },
+        'react-dom/client': {
+          singleton: true,
+        },
         'react/jsx-runtime': {
           singleton: true,
         },
