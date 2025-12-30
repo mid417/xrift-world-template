@@ -1,4 +1,4 @@
-import { Mirror, ScreenShareDisplay, VideoScreen } from '@xrift/world-components'
+import { Mirror, ScreenShareDisplay, SpawnPoint, VideoScreen } from '@xrift/world-components'
 import { RigidBody } from '@react-three/rapier'
 import { useRef } from 'react'
 import { Mesh } from 'three'
@@ -23,6 +23,9 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
     <group position={position} scale={scale}>
       {/* Skybox - 360度パノラマ背景 */}
       <Skybox radius={500} />
+
+      {/* プレイヤーのスポーン地点 */}
+      <SpawnPoint position={[0, 0, 5]} yaw={180} />
 
       {/* 照明設定 */}
       <ambientLight intensity={0.3} />
