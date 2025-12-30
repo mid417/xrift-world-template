@@ -1,4 +1,4 @@
-import { Mirror, ScreenShareDisplay, VideoScreen } from '@xrift/world-components'
+import { Mirror, ScreenShareDisplay, SpawnPoint, VideoScreen } from '@xrift/world-components'
 import { RigidBody } from '@react-three/rapier'
 import { useRef } from 'react'
 import { Mesh } from 'three'
@@ -6,7 +6,6 @@ import { Duck } from './components/Duck'
 import { InteractableButton } from './components/InteractableButton'
 import { RotatingObject } from './components/RotatingObject'
 import { Skybox } from './components/Skybox'
-import { SpawnPoint } from './components/SpawnPoint'
 import { COLORS, WORLD_CONFIG } from './constants'
 
 export interface WorldProps {
@@ -26,7 +25,7 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
       <Skybox radius={500} />
 
       {/* プレイヤーのスポーン地点 */}
-      <group position={[0, 0, 7.33]} rotation={[0, Math.PI, 0]}>
+      <group position={[0.11, 0, 7.59]} rotation={[0, 0, 0]}>
         <SpawnPoint />
       </group>
 
