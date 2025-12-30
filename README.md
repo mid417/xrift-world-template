@@ -157,6 +157,34 @@ function App() {
 
 本番環境（XRiftプラットフォーム上）では、フロントエンド側が自動的に`XRiftProvider`でワールドコンポーネントをラップするため、ワールド側で`XRiftProvider`を使用する必要はありません。
 
+#### プレイヤーのスポーン地点を設定する
+
+`src/components/SpawnPoint`の`SpawnPoint`コンポーネントを使用すると、プレイヤーがワールドに入った時の初期位置と向きを設定できます。このコンポーネントは`@xrift/world-components`のSpawnPointをラップし、開発時に位置と向きを視覚的に確認できるヘルパー表示を追加しています。
+
+```typescript
+import { SpawnPoint } from './components/SpawnPoint'
+
+function World() {
+  return (
+    <group>
+      {/* プレイヤーのスポーン地点 */}
+      <SpawnPoint position={[0, 0, 5]} yaw={180} />
+
+      {/* 他のワールド要素 */}
+    </group>
+  )
+}
+```
+
+##### SpawnPointのプロパティ
+
+- `position` (任意): スポーン位置 `[x, y, z]`。デフォルトは `[0, 0, 0]`
+- `yaw` (任意): スポーン時のY軸回転角度（度数法）。デフォルトは `0`（Z軸負方向を向く）
+
+##### 使用例
+
+このテンプレートでは、`src/World.tsx`でプレイヤーがワールドの中央やや手前（Z=5）に、原点方向（yaw=180）を向いてスポーンするように設定されています。開発時には半透明の円柱と矢印でスポーン位置と向きが表示されます。
+
 #### インタラクティブなオブジェクトの作成
 
 `@xrift/world-components`の`Interactable`コンポーネントを使用すると、ユーザーがクリック（インタラクト）できる3Dオブジェクトを簡単に作成できます。

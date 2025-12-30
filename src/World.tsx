@@ -6,6 +6,7 @@ import { Duck } from './components/Duck'
 import { InteractableButton } from './components/InteractableButton'
 import { RotatingObject } from './components/RotatingObject'
 import { Skybox } from './components/Skybox'
+import { SpawnPoint } from './components/SpawnPoint'
 import { COLORS, WORLD_CONFIG } from './constants'
 
 export interface WorldProps {
@@ -23,6 +24,9 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
     <group position={position} scale={scale}>
       {/* Skybox - 360度パノラマ背景 */}
       <Skybox radius={500} />
+
+      {/* プレイヤーのスポーン地点 */}
+      <SpawnPoint position={[0, 0, 5]} yaw={180} />
 
       {/* 照明設定 */}
       <ambientLight intensity={0.3} />
