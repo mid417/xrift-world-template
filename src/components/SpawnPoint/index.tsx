@@ -45,9 +45,11 @@ export const SpawnPoint: React.FC<SpawnPointProps> = ({
   const yawRad = (yaw * Math.PI) / 180
 
   return (
-    <group position={position}>
+    <>
       {/* SpawnPoint本体 */}
-      <SpawnPointCore yaw={yaw} />
+      <SpawnPointCore position={position} yaw={yaw} />
+
+      <group position={position}>
 
       {/* 半透明の円柱（下から上にかけて透明度が増す） */}
       <mesh position={[0, 0.375, 0]}>
@@ -68,6 +70,7 @@ export const SpawnPoint: React.FC<SpawnPointProps> = ({
           <meshBasicMaterial color="#00ff88" />
         </mesh>
       </group>
-    </group>
+      </group>
+    </>
   )
 }
