@@ -65,6 +65,39 @@ npm run preview
 npm run typecheck
 ```
 
+## 物理設定（physics）
+
+xrift.jsonの`world.physics`セクションでワールドの物理動作をカスタマイズできます。
+
+| 設定 | 型 | デフォルト | 説明 |
+|------|-----|---------|------|
+| `gravity` | number | 9.81 | 重力の強さ |
+| `allowInfiniteJump` | boolean | true | 無限ジャンプを許可するか |
+
+### 例：アスレチックワールド（無限ジャンプ禁止）
+
+```json
+{
+  "world": {
+    "physics": {
+      "allowInfiniteJump": false
+    }
+  }
+}
+```
+
+### 例：低重力ワールド
+
+```json
+{
+  "world": {
+    "physics": {
+      "gravity": 3.0
+    }
+  }
+}
+```
+
 ## ドキュメント
 
 ワールド開発の詳細（アセットの読み込み、SpawnPoint、Interactable、useInstanceStateなど）については、公式ドキュメントをご覧ください。
