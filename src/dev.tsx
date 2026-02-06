@@ -16,10 +16,10 @@ import { LAYERS, XRiftProvider } from '@xrift/world-components'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Physics } from '@react-three/rapier'
 import { PointerLockControls } from '@react-three/drei'
-import { StrictMode, useEffect, useRef } from 'react'
+import { StrictMode, useCallback, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Color, Raycaster, Vector2, Vector3 } from 'three'
-import type { Mesh, Object3D } from 'three'
+import { Raycaster, Vector2, Vector3 } from 'three'
+import type { Object3D } from 'three'
 import { World } from './World'
 
 const rootElement = document.getElementById('root')
@@ -83,14 +83,16 @@ function FirstPersonControls() {
   return <PointerLockControls />
 }
 
-function CenterRaycaster() {
+function CenterRaycaster({
+  onHitChange,
+}: {
+  onHitChange: (hit: boolean) => void
+}) {
   const { camera, scene } = useThree()
   const raycasterRef = useRef(new Raycaster())
   const ndcRef = useRef(new Vector2(0, 0))
-  const markerRef = useRef<Mesh>(null)
   const currentHitRef = useRef<Object3D | null>(null)
-  const directionRef = useRef(new Vector3())
-  const markerOffsetRef = useRef(new Vector3())
+  const wasHitRef = useRef(false)
 
   useEffect(() => {
     const handleClick = () => {
@@ -120,24 +122,69 @@ function CenterRaycaster() {
     const hits = raycaster.intersectObjects(scene.children, true)
     currentHitRef.current = hits.length > 0 ? hits[0].object : null
 
-    camera.getWorldDirection(directionRef.current)
-    markerOffsetRef.current.copy(directionRef.current).multiplyScalar(1.5)
-    if (markerRef.current) {
-      markerRef.current.position
-        .copy(camera.position)
-        .add(markerOffsetRef.current)
-      markerRef.current.quaternion.copy(camera.quaternion)
+    const isHit = currentHitRef.current !== null
+    if (isHit !== wasHitRef.current) {
+      wasHitRef.current = isHit
+      onHitChange(isHit)
     }
   })
 
+  return null
+}
+
+const CROSSHAIR_SIZE = 20
+const CROSSHAIR_THICKNESS = 2
+const CROSSHAIR_ACTIVE_THICKNESS = 3
+const HIGHLIGHT_COLOR = '#4dabf7'
+
+const crosshairStyle: React.CSSProperties = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  pointerEvents: 'none',
+  zIndex: 100,
+  width: CROSSHAIR_SIZE,
+  height: CROSSHAIR_SIZE,
+}
+
+const crosshairLineBase: React.CSSProperties = {
+  position: 'absolute',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  transition: 'background-color 0.2s ease, width 0.15s ease, height 0.15s ease, box-shadow 0.2s ease',
+}
+
+function Crosshair({ active }: { active: boolean }) {
+  const color = active ? HIGHLIGHT_COLOR : 'rgba(255, 255, 255, 0.1)'
+  const shadow = active ? `0 0 8px ${HIGHLIGHT_COLOR}` : 'none'
+
   return (
-    <mesh ref={markerRef}>
-      <sphereGeometry args={[0.01, 4, 4]} />
-      <meshStandardMaterial
-        color={new Color('#ffcf5c')}
-        emissive={new Color('#ffcf5c')}
+    <div style={crosshairStyle}>
+      <div
+        style={{
+          ...crosshairLineBase,
+          top: '50%',
+          left: 0,
+          width: '100%',
+          height: active ? CROSSHAIR_ACTIVE_THICKNESS : CROSSHAIR_THICKNESS,
+          transform: 'translateY(-50%)',
+          backgroundColor: color,
+          boxShadow: shadow,
+        }}
       />
-    </mesh>
+      <div
+        style={{
+          ...crosshairLineBase,
+          top: 0,
+          left: '50%',
+          width: active ? CROSSHAIR_ACTIVE_THICKNESS : CROSSHAIR_THICKNESS,
+          height: '100%',
+          transform: 'translateX(-50%)',
+          backgroundColor: color,
+          boxShadow: shadow,
+        }}
+      />
+    </div>
   )
 }
 
@@ -194,9 +241,11 @@ function ControlsHelp() {
   )
 }
 
-createRoot(rootElement).render(
-  <StrictMode>
-    {/* 開発環境用のProvider - ベースパスを指定 */}
+function App() {
+  const [isHit, setIsHit] = useState(false)
+  const handleHitChange = useCallback((hit: boolean) => setIsHit(hit), [])
+
+  return (
     <XRiftProvider baseUrl="/">
       <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
         <Canvas
@@ -205,13 +254,20 @@ createRoot(rootElement).render(
           gl={{ preserveDrawingBuffer: true }}
         >
           <FirstPersonControls />
-          <CenterRaycaster />
+          <CenterRaycaster onHitChange={handleHitChange} />
           <Physics>
             <World />
           </Physics>
         </Canvas>
+        <Crosshair active={isHit} />
         <ControlsHelp />
       </div>
     </XRiftProvider>
+  )
+}
+
+createRoot(rootElement).render(
+  <StrictMode>
+    <App />
   </StrictMode>
 )
