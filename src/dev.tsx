@@ -7,6 +7,7 @@
  * 操作方法:
  * - 画面クリックでポインターロック開始
  * - マウスで視点操作、WASD / 矢印キーで移動
+ * - Q / E で上昇 / 下降
  * - インタラクト可能オブジェクトに照準を合わせてクリック
  * - ESC でポインターロック解除
  */
@@ -55,11 +56,10 @@ function FirstPersonControls() {
     const strafe =
       (keys.has('KeyD') || keys.has('ArrowRight') ? 1 : 0) +
       (keys.has('KeyA') || keys.has('ArrowLeft') ? -1 : 0)
+    const vertical =
+      (keys.has('KeyE') ? 1 : 0) + (keys.has('KeyQ') ? -1 : 0)
 
-    if (forward === 0 && strafe === 0) {
-      camera.position.y = 1.5
-      return
-    }
+    if (forward === 0 && strafe === 0 && vertical === 0) return
 
     camera.getWorldDirection(forwardRef.current)
     forwardRef.current.y = 0
@@ -70,11 +70,13 @@ function FirstPersonControls() {
       .set(0, 0, 0)
       .addScaledVector(forwardRef.current, forward)
       .addScaledVector(rightRef.current, strafe)
-      .normalize()
-      .multiplyScalar(4 * delta)
+
+    const horizontalLength = moveRef.current.length()
+    if (horizontalLength > 0) moveRef.current.normalize()
+    moveRef.current.multiplyScalar(4 * delta)
+    moveRef.current.y += vertical * 4 * delta
 
     camera.position.add(moveRef.current)
-    camera.position.y = 1.5
   })
 
   return <PointerLockControls />
@@ -138,11 +140,63 @@ function CenterRaycaster() {
   )
 }
 
+const controlsHelpStyle: React.CSSProperties = {
+  position: 'absolute',
+  bottom: 16,
+  left: 16,
+  padding: '10px 14px',
+  background: 'rgba(0, 0, 0, 0.55)',
+  color: '#fff',
+  borderRadius: 8,
+  fontSize: 12,
+  lineHeight: 1.7,
+  pointerEvents: 'none',
+  userSelect: 'none',
+  fontFamily: 'system-ui, sans-serif',
+  backdropFilter: 'blur(4px)',
+}
+
+const kbdStyle: React.CSSProperties = {
+  display: 'inline-block',
+  padding: '1px 5px',
+  background: 'rgba(255, 255, 255, 0.15)',
+  borderRadius: 3,
+  fontSize: 11,
+  fontFamily: 'inherit',
+  marginRight: 2,
+}
+
+function ControlsHelp() {
+  const Kbd = ({ children }: { children: React.ReactNode }) => (
+    <kbd style={kbdStyle}>{children}</kbd>
+  )
+
+  return (
+    <div style={controlsHelpStyle}>
+      <div>
+        <Kbd>Click</Kbd> ロック開始 / インタラクト
+      </div>
+      <div>
+        <Kbd>W</Kbd>
+        <Kbd>A</Kbd>
+        <Kbd>S</Kbd>
+        <Kbd>D</Kbd> 移動
+      </div>
+      <div>
+        <Kbd>Q</Kbd> 下降 <Kbd>E</Kbd> 上昇
+      </div>
+      <div>
+        <Kbd>ESC</Kbd> ロック解除
+      </div>
+    </div>
+  )
+}
+
 createRoot(rootElement).render(
   <StrictMode>
     {/* 開発環境用のProvider - ベースパスを指定 */}
     <XRiftProvider baseUrl="/">
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
         <Canvas
           shadows
           camera={{ position: [0, 1.5, 5], fov: 75 }}
@@ -154,6 +208,7 @@ createRoot(rootElement).render(
             <World />
           </Physics>
         </Canvas>
+        <ControlsHelp />
       </div>
     </XRiftProvider>
   </StrictMode>
