@@ -303,9 +303,6 @@ function ControlsHelp() {
         <Kbd>Q</Kbd> 下降 <Kbd>E</Kbd>
         <Kbd>Space</Kbd> 上昇
       </div>
-      <div>
-        <Kbd>ESC</Kbd> ロック解除
-      </div>
     </div>
   )
 }
