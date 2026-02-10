@@ -19,7 +19,7 @@ import { PointerLockControls } from '@react-three/drei'
 import { StrictMode, useCallback, useEffect, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { PCFShadowMap, Raycaster, Vector2, Vector3 } from 'three'
-import type { Object3D } from 'three'
+import type { Group, Mesh, Object3D } from 'three'
 import { World } from './World'
 
 const rootElement = document.getElementById('root')
@@ -110,6 +110,34 @@ function FirstPersonControls() {
   })
 
   return <PointerLockControls />
+}
+
+function DummyAvatar({ height = 1.5 }: { height?: number }) {
+  const forwardRef = useRef(new Vector3())
+  const groupRef = useRef<Group>(null)
+  const headRef = useRef<Mesh>(null)
+
+  useFrame(({ camera }) => {
+    camera.getWorldDirection(forwardRef.current)
+    const yaw = -Math.atan2(forwardRef.current.x, -forwardRef.current.z)
+    const pitch = Math.asin(forwardRef.current.y)
+    groupRef.current?.position.copy(camera.position)
+    groupRef.current?.rotation.set(0, yaw, 0)
+    headRef.current?.rotation.set(pitch, 0, 0)
+  })
+
+  return (
+    <group ref={groupRef}>
+      <mesh castShadow ref={headRef}>
+        <boxGeometry args={[0.2, 0.1, 0.2]} />
+        <meshLambertMaterial color="#ffcccc" />
+      </mesh>
+      <mesh castShadow position={[0, -height * 0.55, 0]}>
+        <boxGeometry args={[0.3, height, 0.1]} />
+        <meshLambertMaterial color="#ccffcc" />
+      </mesh>
+    </group>
+  )
 }
 
 function CenterRaycaster({
@@ -361,6 +389,7 @@ function App() {
           gl={{ preserveDrawingBuffer: true }}
         >
           <FirstPersonControls />
+          <DummyAvatar />
           <CenterRaycaster onHitChange={handleHitChange} />
           <Physics>
             <World />
