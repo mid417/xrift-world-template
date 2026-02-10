@@ -450,5 +450,4 @@ const model = useGLTF(`${baseUrl}/models/robot.glb`)
 - **アニメーション**: `src/components/RotatingObject/index.tsx`
 - **インタラクション**: `src/components/InteractableButton/index.tsx`
 - **ユーザー追跡**: `src/components/RemoteUserHUDs/index.tsx`
-- **カスタムシェーダ**: `src/components/SpawnPoint/index.tsx`
 - **メインワールド**: `src/World.tsx`
