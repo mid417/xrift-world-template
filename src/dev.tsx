@@ -32,33 +32,62 @@ function FirstPersonControls() {
   const moveRef = useRef(new Vector3())
 
   useEffect(() => {
+    const shouldHandle = (event: KeyboardEvent) => {
+      if (event.isComposing) return false
+      const target = event.target as HTMLElement
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      ) return false
+      return true
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      pressedKeysRef.current.add(event.code)
+      if (!shouldHandle(event)) return
+      const code = event.code
+      if (!pressedKeysRef.current.has(code)) {
+        pressedKeysRef.current.add(code)
+      }
+      if (event.key) {
+        pressedKeysRef.current.add(event.key)
+      }
+      event.preventDefault()
+      event.stopPropagation()
+      event.stopImmediatePropagation()
     }
     const handleKeyUp = (event: KeyboardEvent) => {
+      if (!shouldHandle(event)) return
       pressedKeysRef.current.delete(event.code)
+      if (event.key) {
+        pressedKeysRef.current.delete(event.key)
+      }
+      event.preventDefault()
+      event.stopPropagation()
+      event.stopImmediatePropagation()
     }
 
-    window.addEventListener('keydown', handleKeyDown)
-    window.addEventListener('keyup', handleKeyUp)
+    const options = { passive: false, capture: true }
+    window.addEventListener('keydown', handleKeyDown, options)
+    window.addEventListener('keyup', handleKeyUp, options)
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      window.removeEventListener('keyup', handleKeyUp)
+      window.removeEventListener('keydown', handleKeyDown, options)
+      window.removeEventListener('keyup', handleKeyUp, options)
     }
   }, [])
 
   useFrame(({ camera }, delta) => {
     const keys = pressedKeysRef.current
     const forward =
-      (keys.has('KeyW') || keys.has('ArrowUp') ? 1 : 0) +
-      (keys.has('KeyS') || keys.has('ArrowDown') ? -1 : 0)
+      (keys.has('KeyW') || keys.has('w') || keys.has('ArrowUp') ? 1 : 0) +
+      (keys.has('KeyS') || keys.has('s') || keys.has('ArrowDown') ? -1 : 0)
     const strafe =
-      (keys.has('KeyD') || keys.has('ArrowRight') ? 1 : 0) +
-      (keys.has('KeyA') || keys.has('ArrowLeft') ? -1 : 0)
+      (keys.has('KeyD') || keys.has('d') || keys.has('ArrowRight') ? 1 : 0) +
+      (keys.has('KeyA') || keys.has('a') || keys.has('ArrowLeft') ? -1 : 0)
     const vertical =
-      (keys.has('KeyE') || keys.has('Space') ? 1 : 0) +
-      (keys.has('KeyQ') ? -1 : 0)
+      (keys.has('KeyE') || keys.has('e') || keys.has('Space') || keys.has(' ') ? 1 : 0) +
+      (keys.has('KeyQ') || keys.has('q') ? -1 : 0)
 
     if (forward === 0 && strafe === 0 && vertical === 0) return
 
@@ -117,6 +146,7 @@ function CenterRaycaster({
 
   useFrame(() => {
     const raycaster = raycasterRef.current
+    raycaster.far = 3.5
     raycaster.layers.set(LAYERS.INTERACTABLE)
     raycaster.setFromCamera(ndcRef.current, camera)
     const hits = raycaster.intersectObjects(scene.children, true)
