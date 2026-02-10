@@ -385,7 +385,7 @@ function App() {
       <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
         <Canvas
           shadows={{ type: PCFShadowMap }}
-          camera={{ position: [0, 1.5, 5], fov: 75 }}
+          camera={{ position: [0, 1.6, 0], fov: 50, near: 0.01, far: 1000 }}
           gl={{ preserveDrawingBuffer: true }}
         >
           <FirstPersonControls />
