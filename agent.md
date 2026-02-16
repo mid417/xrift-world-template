@@ -13,11 +13,11 @@
 ```typescript
 // ✅ 正しい
 const { baseUrl } = useXRift()
-const model = useGLTF(`${baseUrl}models/robot.glb`)
+const model = useGLTF(`${baseUrl}robot.glb`)
 
 // ❌ 間違い
-const model = useGLTF('/models/robot.glb')           // 絶対パス NG
-const model = useGLTF(`${baseUrl}/models/robot.glb`) // 余分な / NG
+const model = useGLTF('/robot.glb')           // 絶対パス NG
+const model = useGLTF(`${baseUrl}/robot.glb`) // 余分な / NG
 ```
 
 ---
@@ -97,7 +97,7 @@ import { RigidBody } from '@react-three/rapier'
 
 export const MyModel = () => {
   const { baseUrl } = useXRift()
-  const { scene } = useGLTF(`${baseUrl}models/model.glb`)
+  const { scene } = useGLTF(`${baseUrl}model.glb`)
 
   return (
     <RigidBody type="fixed">
@@ -115,7 +115,7 @@ import { useTexture } from '@react-three/drei'
 
 export const TexturedMesh = () => {
   const { baseUrl } = useXRift()
-  const texture = useTexture(`${baseUrl}textures/albedo.png`)
+  const texture = useTexture(`${baseUrl}albedo.png`)
 
   return (
     <mesh>
@@ -135,9 +135,9 @@ import { useTexture } from '@react-three/drei'
 export const PBRMaterial = () => {
   const { baseUrl } = useXRift()
   const [albedo, normal, roughness] = useTexture([
-    `${baseUrl}textures/albedo.png`,
-    `${baseUrl}textures/normal.png`,
-    `${baseUrl}textures/roughness.png`,
+    `${baseUrl}albedo.png`,
+    `${baseUrl}normal.png`,
+    `${baseUrl}roughness.png`,
   ])
 
   return (
@@ -297,10 +297,10 @@ interface VRTrackingData {
 
 ```
 xrift-world-template/
-├── public/              # アセットファイル（GLB, テクスチャ, 画像）
-│   ├── models/          # 3Dモデル (.glb, .gltf)
-│   ├── textures/        # テクスチャ画像
-│   └── *.jpg, *.png     # Skybox等
+├── public/              # アセットファイル（直接配置、サブディレクトリ不要）
+│   ├── model.glb        # 3Dモデル
+│   ├── texture.jpg      # テクスチャ画像
+│   └── skybox.jpg       # Skybox等
 ├── src/
 │   ├── components/      # 3Dコンポーネント
 │   ├── World.tsx        # メインワールドコンポーネント
@@ -412,11 +412,11 @@ xrift logout       # ログアウト
 ```typescript
 // ✅ 正しい
 const { baseUrl } = useXRift()
-const model = useGLTF(`${baseUrl}models/robot.glb`)
+const model = useGLTF(`${baseUrl}robot.glb`)
 
 // ❌ 間違い
-const model = useGLTF('/models/robot.glb')
-const model = useGLTF(`${baseUrl}/models/robot.glb`)
+const model = useGLTF('/robot.glb')
+const model = useGLTF(`${baseUrl}/robot.glb`)
 ```
 
 ### 物理演算が効かない
@@ -440,6 +440,7 @@ const model = useGLTF(`${baseUrl}/models/robot.glb`)
 - [XRift CLI (GitHub)](https://github.com/WebXR-JP/xrift-cli)
 - [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
 - [Rapier Physics](https://rapier.rs/docs/)
+- [Triplex（ビジュアルエディタ）](https://triplex.dev/)
 
 ---
 
