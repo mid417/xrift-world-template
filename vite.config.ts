@@ -35,6 +35,9 @@ export default defineConfig({
           singleton: true,
           requiredVersion: '^0.176.0',
         },
+        'three/addons/loaders/DRACOLoader.js': {
+          singleton: true,
+        },
         '@react-three/fiber': {
           singleton: true,
           requiredVersion: '^9.3.0',
