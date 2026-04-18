@@ -1,5 +1,5 @@
 export const WORLD_CONFIG = {
-  size: 20,
+  size: 40,
   wallHeight: 5,
   wallThickness: 0.5,
 } as const

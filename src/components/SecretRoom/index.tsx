@@ -3,9 +3,9 @@ import { TeleportPortal } from '../TeleportPortal'
 
 const ROOM = {
   center: [0, 0, 50] as [number, number, number],
-  width: 10,
-  depth: 8,
-  height: 4,
+  width: 20,
+  depth: 16,
+  height: 5,
   wallThickness: 0.3,
 } as const
 
@@ -71,15 +71,15 @@ export const SecretRoom = () => {
       {/* 照明 */}
       <pointLight
         position={[cx, cy + h - 0.5, cz]}
-        intensity={8}
+        intensity={15}
         color={ACCENT_COLOR}
-        distance={12}
+        distance={24}
       />
       <pointLight
         position={[cx, cy + 1, cz]}
-        intensity={4}
+        intensity={8}
         color="#ffffff"
-        distance={8}
+        distance={16}
       />
 
       {/* 部屋の装飾: 中央の浮遊キューブ */}
