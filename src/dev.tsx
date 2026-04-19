@@ -15,18 +15,20 @@ import xriftConfig from '../xrift.json'
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Root element not found')
 
-const physicsConfig: PhysicsConfig | undefined = (
-  xriftConfig as { physics?: PhysicsConfig }
-).physics
-
-const cameraConfig: CameraConfig | undefined = (
-  xriftConfig as { camera?: CameraConfig }
-).camera
+const worldConfig = xriftConfig.world as {
+  physics?: PhysicsConfig
+  camera?: CameraConfig
+  outputBufferType?: string
+}
 
 createRoot(rootElement).render(
   <StrictMode>
     <XRiftProvider baseUrl="/">
-      <DevEnvironment physicsConfig={physicsConfig} camera={cameraConfig}>
+      <DevEnvironment
+        physicsConfig={worldConfig.physics}
+        camera={worldConfig.camera}
+        outputBufferType={worldConfig.outputBufferType}
+      >
         <World />
       </DevEnvironment>
     </XRiftProvider>
