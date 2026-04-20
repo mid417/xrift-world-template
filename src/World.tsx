@@ -25,15 +25,9 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
 
   return (
     <group position={position} scale={scale}>
-      {/* Skybox - 360度パノラマ背景 */}
+
+      {/* ========== 環境・照明 ========== */}
       <Skybox radius={500} />
-
-      {/* プレイヤーのスポーン地点 */}
-      <group position={[0.11, 0, 7.59]} rotation={[0, 0, 0]}>
-        <SpawnPoint />
-      </group>
-
-      {/* 照明設定 */}
       <ambientLight intensity={0.3} />
       <directionalLight
         position={[5, 10, 5]}
@@ -41,14 +35,12 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
         castShadow
         shadow-mapSize-width={512}
         shadow-mapSize-height={512}
-        shadow-camera-far={50}
-        shadow-camera-left={-15}
-        shadow-camera-right={15}
-        shadow-camera-top={15}
-        shadow-camera-bottom={-15}
+        shadow-camera-far={80}
+        shadow-camera-left={-30}
+        shadow-camera-right={30}
+        shadow-camera-top={30}
+        shadow-camera-bottom={-30}
       />
-
-      {/* 地面 */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
         <mesh ref={groundRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
           <planeGeometry args={[worldSize, worldSize]} />
@@ -56,31 +48,25 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
         </mesh>
       </RigidBody>
 
-      {/* 壁1 */}
+      {/* ========== 壁 ========== */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
         <mesh position={[worldSize / 2, wallHeight / 2, 0]} castShadow>
           <boxGeometry args={[wallThickness, wallHeight, worldSize]} />
           <meshLambertMaterial color={COLORS.wall} />
         </mesh>
       </RigidBody>
-
-      {/* 壁2 */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
         <mesh position={[-worldSize / 2, wallHeight / 2, 0]} castShadow>
           <boxGeometry args={[wallThickness, wallHeight, worldSize]} />
           <meshLambertMaterial color={COLORS.wall} />
         </mesh>
       </RigidBody>
-
-      {/* 壁3 */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
         <mesh position={[0, wallHeight / 2, worldSize / 2]} castShadow>
           <boxGeometry args={[worldSize, wallHeight, wallThickness]} />
           <meshLambertMaterial color={COLORS.wall} />
         </mesh>
       </RigidBody>
-
-      {/* 壁4 */}
       <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
         <mesh position={[0, wallHeight / 2, -worldSize / 2]} castShadow>
           <boxGeometry args={[worldSize, wallHeight, wallThickness]} />
@@ -88,164 +74,150 @@ export const World: React.FC<WorldProps> = ({ position = [0, 0, 0], scale = 1 })
         </mesh>
       </RigidBody>
 
-      {/* いくつかの装飾オブジェクト */}
-      <RigidBody type="fixed" colliders="hull" restitution={0} friction={0}>
-        <mesh position={[3 * scale, 1 * scale, 3 * scale]} castShadow>
-          <boxGeometry args={[2 * scale, 2 * scale, 2 * scale]} />
-          <meshLambertMaterial color={COLORS.decorations.box} />
-        </mesh>
-      </RigidBody>
-
-      <RigidBody type="fixed" colliders="hull" restitution={0} friction={0}>
-        <mesh position={[-3 * scale, 0.5 * scale, -3 * scale]} castShadow>
-          <cylinderGeometry args={[1 * scale, 1 * scale, 1 * scale]} />
-          <meshLambertMaterial color={COLORS.decorations.cylinder} />
-        </mesh>
-      </RigidBody>
-
-      <RigidBody type="fixed" colliders="ball" restitution={0} friction={0}>
-
-      </RigidBody>
-
-      {/* 0.1mの低い段差 */}
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[-6 * scale, 0.05 * scale, 2 * scale]} castShadow>
-          <boxGeometry args={[2 * scale, 0.1 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#00FF00" />
-        </mesh>
-      </RigidBody>
-
-      {/* 0.2mの段差（設定上限） */}
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[-6 * scale, 0.1 * scale, 0 * scale]} castShadow>
-          <boxGeometry args={[2 * scale, 0.2 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#FFFF00" />
-        </mesh>
-      </RigidBody>
-
-      {/* 0.3mの少し高い段差 */}
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[-6 * scale, 0.15 * scale, -2 * scale]} castShadow>
-          <boxGeometry args={[2 * scale, 0.3 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#FF8800" />
-        </mesh>
-      </RigidBody>
-
-      {/* 0.5mの高い段差 */}
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-        <mesh position={[-6 * scale, 0.25 * scale, -4 * scale]} castShadow>
-          <boxGeometry args={[2 * scale, 0.5 * scale, 1 * scale]} />
-          <meshLambertMaterial color="#FF0000" />
-        </mesh>
-      </RigidBody>
-
-      {/* 階段状のオブジェクト */}
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-
-      </RigidBody>
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-
-      </RigidBody>
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-
-      </RigidBody>
-
-      {/* 狭い隙間テスト */}
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-
-      </RigidBody>
-      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
-
-      </RigidBody>
-
-      {/* 鏡 - ワールドの中央に配置 */}
+      {/* ========== 壁面メディア ========== */}
       <Mirror
-        position={[0, 2.5 * scale, -9.5]}
+        position={[0, 2.5 * scale, -19.5]}
         size={[4 * scale, 3 * scale]}
       />
-
       <VideoPlayer
         id='sample-video'
-        position={[9.72, 2, 0]}
+        position={[19.72, 2, 0]}
         rotation={[0, -Math.PI / 2, 0]}
         width={4}
         url='https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
         playing
         volume={0}
       />
-
-      {/* ライブ配信プレイヤー - 前の壁に配置 */}
       <LiveVideoPlayer
         id='sample-live'
-        position={[0, 2, 9.72]}
+        position={[0, 2, 19.72]}
         rotation={[0, Math.PI, 0]}
         width={4}
         url='https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_16x9/bipbop_16x9_variant.m3u8'
         volume={0}
       />
-
-      {/* 画面共有ディスプレイ - 左側の壁に配置 */}
       <ScreenShareDisplay
         id='screen-share-1'
-        position={[-9.72, 2, 0]}
+        position={[-19.72, 2, 0]}
         rotation={[0, Math.PI / 2, 0]}
       />
 
-      {/* アニメーション: ぐるぐる回るオブジェクト */}
-      <RotatingObject
-        radius={4}
-        speed={1}
-        height={2}
-        scale={scale}
-      />
+      {/* ========== 装飾オブジェクト (中央エリア) ========== */}
+      <RigidBody type="fixed" colliders="hull" restitution={0} friction={0}>
+        <mesh position={[3 * scale, 1 * scale, 0]} castShadow>
+          <boxGeometry args={[2 * scale, 2 * scale, 2 * scale]} />
+          <meshLambertMaterial color={COLORS.decorations.box} />
+        </mesh>
+      </RigidBody>
+      <RigidBody type="fixed" colliders="hull" restitution={0} friction={0}>
+        <mesh position={[-3 * scale, 0.5 * scale, 0]} castShadow>
+          <cylinderGeometry args={[1 * scale, 1 * scale, 1 * scale]} />
+          <meshLambertMaterial color={COLORS.decorations.cylinder} />
+        </mesh>
+      </RigidBody>
+      <RigidBody type="fixed" colliders="ball" restitution={0} friction={0}>
 
-      {/* Duck 3Dモデル - useXRiftの使用例 */}
-      <RigidBody type="dynamic" colliders="cuboid" restitution={0} friction={0}>
-        <Duck position={[-2, 0.5, 0]} scale={1} />
       </RigidBody>
 
-      {/* DRACOLoader サンプル - three/addons からの import 例 */}
-      <RigidBody type="dynamic" colliders="cuboid" restitution={0} friction={0}>
-        <DracoSample position={[0, 0.5, 1]} scale={10} />
+      {/* ========== 段差・地形テスト (左奥エリア: x=-12, z=-8~-14) ========== */}
+      {/* 0.1m */}
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+        <mesh position={[-12 * scale, 0.05 * scale, -8 * scale]} castShadow>
+          <boxGeometry args={[2 * scale, 0.1 * scale, 1 * scale]} />
+          <meshLambertMaterial color="#00FF00" />
+        </mesh>
+      </RigidBody>
+      {/* 0.2m（設定上限） */}
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+        <mesh position={[-12 * scale, 0.1 * scale, -10 * scale]} castShadow>
+          <boxGeometry args={[2 * scale, 0.2 * scale, 1 * scale]} />
+          <meshLambertMaterial color="#FFFF00" />
+        </mesh>
+      </RigidBody>
+      {/* 0.3m */}
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+        <mesh position={[-12 * scale, 0.15 * scale, -12 * scale]} castShadow>
+          <boxGeometry args={[2 * scale, 0.3 * scale, 1 * scale]} />
+          <meshLambertMaterial color="#FF8800" />
+        </mesh>
+      </RigidBody>
+      {/* 0.5m */}
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+        <mesh position={[-12 * scale, 0.25 * scale, -14 * scale]} castShadow>
+          <boxGeometry args={[2 * scale, 0.5 * scale, 1 * scale]} />
+          <meshLambertMaterial color="#FF0000" />
+        </mesh>
+      </RigidBody>
+      {/* 階段 */}
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+
+      </RigidBody>
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+
+      </RigidBody>
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+
+      </RigidBody>
+      {/* 狭い隙間 */}
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+
+      </RigidBody>
+      <RigidBody type="fixed" colliders="cuboid" restitution={0} friction={0}>
+
       </RigidBody>
 
-      {/* Interactableボタン - クリック可能なオブジェクトの例（ローカルステート） */}
+      {/* ========== 3Dモデル・アニメーション (右奥エリア: x=10, z=-8) ========== */}
+      <group position={[10, 0, -8]}>
+        <RotatingObject
+          radius={4}
+          speed={1}
+          height={2}
+          scale={scale}
+        />
+      </group>
+      <RigidBody type="dynamic" colliders="cuboid" restitution={0} friction={0}>
+        <Duck position={[8, 0.5, -6]} scale={1} />
+      </RigidBody>
+      <RigidBody type="dynamic" colliders="cuboid" restitution={0} friction={0}>
+        <DracoSample position={[12, 0.5, -6]} scale={10} />
+      </RigidBody>
+
+      {/* ========== インタラクション (左手前エリア: x=-8, z=-3) ========== */}
       <InteractableButton
-        position={[0, 1, -3]}
+        position={[-8, 1, -3]}
         id="sample-button-1"
         label="ローカル"
         interactionText="ボタンをクリック"
         useGlobalState={false}
       />
-
-      {/* 別のInteractableボタン（グローバルステート - インスタンス全体で同期） */}
       <InteractableButton
-        position={[2.5, 1, -3]}
+        position={[-5.5, 1, -3]}
         id="sample-button-2"
         label="グローバル"
         interactionText="カウントアップ"
         useGlobalState={true}
       />
 
-      {/* ユーザーの位置情報HUD - useUsers() APIの検証用 */}
-      <RemoteUserHUDs />
-
-      {/* テレポートポータル: 隠し部屋へ */}
+      {/* ========== ナビゲーション (手前中央エリア: z=6~8) ========== */}
+      <group position={[0, 0, 8]}>
+        <SpawnPoint />
+      </group>
       <TeleportPortal
-        position={[5, 0, 5]}
+        position={[3, 0, 6]}
         destination={[0, 0.5, 52]}
         yaw={0}
         label="隠し部屋へ"
         color="#8B5CF6"
       />
-
-      {/* 別インスタンスへのポータル */}
       <Portal
         instanceId="e1f2ba87-fb50-406e-9527-2334cf75cd4c"
-        position={[-5, 0, 5]}
+        position={[-3, 0, 6]}
       />
 
-      {/* 隠し部屋（メインワールドから離れた場所） */}
+      {/* ========== ユーザー情報 ========== */}
+      <RemoteUserHUDs />
+
+      {/* ========== 隠し部屋 ========== */}
       <SecretRoom />
     </group>
   )
