@@ -50,6 +50,10 @@ export default defineConfig({
           singleton: true,
           requiredVersion: '^10.7.3',
         },
+        '@react-three/uikit': {
+          singleton: true,
+          requiredVersion: '^1.0.0',
+        },
         '@xrift/world-components': {
           singleton: true,
           requiredVersion: '^0.1.0',
